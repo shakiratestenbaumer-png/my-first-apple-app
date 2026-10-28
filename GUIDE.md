@@ -288,36 +288,41 @@ After enabling Developer Mode and trusting the developer profile:
 
 ## 11. Installing on Apple Watch
 
-### Important: How Watch Apps Get Installed
+### ⚠️ Important: Watch App Sideloading Limitations
 
-Apple Watch apps are typically installed through the companion iPhone app. For a standalone watchOS app sideloaded via Sideloadly:
+**Sideloadly and AltStore cannot install apps on Apple Watch.** They only support iPhone.
 
-### Method 1: Via iPhone Watch App (Recommended)
+Unlike iPhones, the Apple Watch has no USB port — it communicates only via Bluetooth through its paired iPhone. The only ways to install a custom app on Apple Watch are:
 
-1. First, install the **iPhone app** on your iPhone using steps from Section 9
-2. Open the **Watch** app on your iPhone
-3. Scroll down to find **MyFirstWatchApp** under "Available Apps"
-4. Tap **Install**
-5. The app will transfer to your Apple Watch via Bluetooth
+| Method | Requirements |
+|---|---|
+| **Xcode on a Mac** | Physical or cloud Mac, iPhone connected via USB, Watch paired to iPhone. Xcode pushes the app: Mac → iPhone (USB) → Watch (Bluetooth) |
+| **TestFlight** | $99/year Apple Developer Program. Upload via Xcode or CI, then install over-the-air on Watch |
+| **App Store** | $99/year Apple Developer Program + Apple review process |
 
-### Method 2: Direct Sideload of Watch IPA
+### If You Can Borrow a Mac for 30 Minutes
 
-If the Watch app doesn't appear in the Watch app on iPhone:
+This is the quickest path to getting the Watch app on your wrist:
 
-1. Use Sideloadly to install `MyFirstWatchApp.ipa` on your iPhone
-2. The Watch companion should detect and offer to install the Watch component
-3. Alternatively, on your Apple Watch:
-   - Go to the **App Grid** (press the Digital Crown)
-   - Look for the app icon
+1. Clone the repo on the Mac:
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/my-first-apple-app.git
+   cd my-first-apple-app/MyFirstAppleApp
+   open MyFirstAppleApp.xcodeproj
+   ```
+2. In Xcode: **Xcode → Settings → Accounts** → sign in with your Apple ID
+3. In the project navigator, select the project → **MyFirstWatchApp** target → **Signing & Capabilities** → select your Team
+4. Connect your **iPhone** via USB (the Watch must be paired with this iPhone)
+5. In the scheme selector (top bar), choose **MyFirstWatchApp** and your Watch as destination
+6. Click ▶️ **Run** — Xcode will install the app on your Watch via iPhone
 
-### Enable Developer Mode on Apple Watch
+### Developer Mode on Apple Watch
 
-Similar to iPhone, your Watch may require Developer Mode:
+Developer Mode on Apple Watch (Settings → Privacy & Security → Developer Mode) only appears **after** a developer app has been installed via Xcode. It will not show up from Sideloadly-installed iPhone apps. This is expected behaviour — once you install via Xcode, the toggle will appear.
 
-1. On Apple Watch: **Settings → Privacy & Security → Developer Mode**
-2. Toggle **ON**
-3. The watch will restart
-4. Confirm by tapping **Turn On** after restart
+### Current Status
+
+The Watch app code is **fully written and compiles successfully** on GitHub Actions. The `.ipa` artifact is built and ready. It's waiting for Mac access to be installed on the physical Watch device.
 
 ---
 
