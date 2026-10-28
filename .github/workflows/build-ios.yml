@@ -104,11 +104,19 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM="" | tail -50
 
+      - name: List archive contents for debugging
+        run: |
+          echo "=== Archive structure ==="
+          find ${{ github.workspace }}/build/MyFirstWatchApp.xcarchive/Products -type d | head -20
+          echo "=== Looking for .app bundles ==="
+          find ${{ github.workspace }}/build/MyFirstWatchApp.xcarchive -name "*.app" -type d
+
       - name: Create Watch IPA from archive
         run: |
           mkdir -p ${{ github.workspace }}/build/watch-ipa/Payload
-          cp -r ${{ github.workspace }}/build/MyFirstWatchApp.xcarchive/Products/Applications/MyFirstWatchApp.app \
-            ${{ github.workspace }}/build/watch-ipa/Payload/
+          WATCH_APP=$(find ${{ github.workspace }}/build/MyFirstWatchApp.xcarchive -name "*.app" -type d | head -1)
+          echo "Found watch app at: $WATCH_APP"
+          cp -r "$WATCH_APP" ${{ github.workspace }}/build/watch-ipa/Payload/
           cd ${{ github.workspace }}/build/watch-ipa
           zip -r ${{ github.workspace }}/build/MyFirstWatchApp.ipa Payload
 
