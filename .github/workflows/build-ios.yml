@@ -45,10 +45,25 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM="" | tail -50
 
-      - name: Upload iPhone build artifact
+      - name: Create IPA from archive
+        run: |
+          mkdir -p ${{ github.workspace }}/build/ipa/Payload
+          cp -r ${{ github.workspace }}/build/MyFirstAppleApp.xcarchive/Products/Applications/MyFirstAppleApp.app \
+            ${{ github.workspace }}/build/ipa/Payload/
+          cd ${{ github.workspace }}/build/ipa
+          zip -r ${{ github.workspace }}/build/MyFirstAppleApp.ipa Payload
+
+      - name: Upload iPhone IPA
         uses: actions/upload-artifact@v4
         with:
-          name: MyFirstAppleApp-iPhone-Build
+          name: MyFirstAppleApp-iPhone-IPA
+          path: build/MyFirstAppleApp.ipa
+          retention-days: 30
+
+      - name: Upload iPhone archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyFirstAppleApp-iPhone-Archive
           path: build/MyFirstAppleApp.xcarchive
           retention-days: 30
 
@@ -89,9 +104,24 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM="" | tail -50
 
-      - name: Upload Watch build artifact
+      - name: Create Watch IPA from archive
+        run: |
+          mkdir -p ${{ github.workspace }}/build/watch-ipa/Payload
+          cp -r ${{ github.workspace }}/build/MyFirstWatchApp.xcarchive/Products/Applications/MyFirstWatchApp.app \
+            ${{ github.workspace }}/build/watch-ipa/Payload/
+          cd ${{ github.workspace }}/build/watch-ipa
+          zip -r ${{ github.workspace }}/build/MyFirstWatchApp.ipa Payload
+
+      - name: Upload Watch IPA
         uses: actions/upload-artifact@v4
         with:
-          name: MyFirstWatchApp-Build
+          name: MyFirstWatchApp-IPA
+          path: build/MyFirstWatchApp.ipa
+          retention-days: 30
+
+      - name: Upload Watch archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: MyFirstWatchApp-Archive
           path: build/MyFirstWatchApp.xcarchive
           retention-days: 30
